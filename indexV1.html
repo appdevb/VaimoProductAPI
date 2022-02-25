@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- font-awesome library to make the
+	webpage more appealing -->
+<link rel="stylesheet" href=
+"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+ <!-- Load React. -->
+ <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+
+<!-- Internal CSS styling -->
+<style>
+
+	* {
+  	box-sizing: border-box;
+	}
+
+	/* Create three equal columns next to each other */
+	.column {
+  	float: left;
+  	width: 33.33%;
+  	padding: 10px;
+ 
+	}
+
+	/* Clear floats after the columns */
+	.row:after {
+  	content: "";
+  	display: table;
+ 	clear: both;
+	}
+
+	.content {
+	text-align: center;
+	padding: 30px;
+	margin: 0px auto;
+	}
+
+	.details {
+	margin-left: auto;
+	margin-right: auto;
+	}
+
+	img {
+	width: 416px;
+    height: 416px;
+	border-radius: 5px;
+	box-shadow: black;
+	}
+	.infoBox {
+    width: 526px;
+    height: 544px;
+    }
+    .shipBox {
+  	background-color: rgba(255, 255, 255, 0);
+ 	border-radius: 8px;
+ 	width: 306px;
+ 	height: 256px;
+	}
+	.2021-hot-selling-gps {
+  	color: #333333;
+  	font-family: Roboto;
+  	font-size: 16px;
+  	line-height: 24px;
+  	width: 526px;
+  	text-align: left;
+	}
+	.readytoship {
+  	background-color: rgba(255, 255, 255, 0);
+  	border-radius: 2px 0 0 2px;
+  	width: 90px;
+  	height: 20px;
+  	font-size: 12px;
+	}
+	.instock{
+  	background-color: rgba(255, 255, 255, 0);
+  	width: 75px;
+  	height: 20px;
+  	font-size: 12px;
+	}
+	.fastdispatch {
+  	background-color: rgba(255, 255, 255, 0);
+  	border-radius: 0 2px 2px 0;
+  	width: 106px;
+  	height: 20px;
+  	font-size: 12px;
+	}
+	.tags{
+  	background-color: rgba(255, 255, 255, 0);
+  	border-radius: 2px;
+  	width: 111px;
+  	height: 20px;
+  	font-size: 12px;
+	}
+	.ratingBox {
+	width: 242px;
+	height: 16px;
+	font-size: 12px;	
+	}
+	.rating {
+  	color: #FF6600;
+  	font-family: Roboto;
+  	font-size: 12px;
+  	line-height: 16px;
+  	text-align: left;
+	}
+	.srating {
+  	color: #FF6600;
+  	font-family: Roboto;
+  	font-size: 12px;
+  	line-height: 16px;
+  	text-align: left;
+	}
+	.reviews {
+  	color: #999999;
+  	font-family: Roboto;
+  	font-size: 12px;
+  	line-height: 16px;
+  	text-align: left;
+	}
+	.total_buyers {
+    color: #333333;
+    font-family: Roboto;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: left;
+	}
+	.marchExpo {
+  	background-color: rgba(255, 255, 255, 0);
+  	width: 526px;
+  	height: 40px;
+	}	
+	.marchExpoText {
+  	color: #FF6600;
+  	font-family: Roboto;
+  	font-size: 14px;
+  	line-height: 16px;
+  	text-align: left;
+	}
+	.cTimer {
+	width: 328px;
+	height: 24px;	
+	}
+	.options {
+	width: 526px;
+	height: 144px;
+	}
+
+</style>
+</head>
+
+<body>
+<div class="row">
+  	<div class="column">
+    <div id="product-img"></div>
+  	</div>
+  	<div class="column">
+  		<div class="infoBox">
+  			<div class="props">
+  				<div id="readytoship" class="readytoship"></div>
+  				<div id="instock" class="instock"></div>
+  				<div id="fastdispatch" class="fastdispatch"></div>
+  			</div>
+    		<div class="2021-hot-selling-gps" id="name">
+    			</div><div class="tags" id="tags"></div>
+
+    	<div class="ratingBox">
+	    	<p class="srating" id="srating"></p>
+	    	<p class="reviews" id="reviews"></p>
+	    	<p class="total_buyers" id="total_buyers"></p>
+	    </div>
+
+	    <div class="marchExpo">
+	    	<div class="marchExpoText"> <ul>
+	    		<li>Free Shipping (up to $40)</li>
+	    		<li> On-time delivery guaranteed ></li>
+	    	</div>
+
+	    </div>
+
+	    <div class="cTimer">
+	    	<div id="discount"></div>
+	    	<p>OFF Discount ends in</p>
+	    	<div id="end_date"></div>
+
+	    </div>
+	     <table id="options"></table>
+
+
+
+    	</div>
+    	
+  	</div>
+  	<div class="column">
+  		<div class="shipBox">
+  			Ship Box Info and Total to go here
+  			
+  		</div>
+    
+  	</div>
+</div>
+</body>
+<script>
+const api_url = "https://fe-assignment.vaimo.net/";
+
+async function getproduct() {
+
+	// Making an API call (request)
+	// and getting the response back
+	const response = await fetch(api_url);
+
+	// Parsing it to JSON format
+	const data = await response.json();
+	console.log(data.product);
+
+	// Retrieving data from JSON
+	const product = data.product;
+	let image = product.gallery[0].main;
+	let image_icon = product.gallery[0].main;
+	let readytoship = product.shipping.props.ready_to_ship;
+	let instock = product.shipping.props.in_stock;
+	let fastdispatch = product.shipping.props.fast_dispatch;
+	let name = product.name;
+	let tags = product.tags;
+	let rating = product.reviews.rating;
+	let reviews = product.reviews.count;
+	document.querySelector("#reviews").textContent = reviews;
+	let srating = rating;
+	document.querySelector("#srating").textContent = srating;
+	let total_buyers = product.reviews.total_buyers;
+	document.querySelector("#total_buyers").textContent = total_buyers;
+	let discount = product.discount.amount;
+	let end_date = product.discount.end_date;
+	document.getElementById("discount").innerHTML = discount;
+	document.getElementById("end_date").innerHTML = end_date;
+	let options = product.options;
+
+
+
+	// Creating a new image element and appending it
+	// to previously created containers
+	let img = document.createElement("img");
+	let img_div = document.getElementById("product-img");
+	img.src = image;
+	img_div.append(img);
+
+	document.getElementById("name").innerHTML = name;
+	document.querySelector("#tags").textContent = tags;
+	show(data);
+
+	if (readytoship, instock, fastdispatch) {
+		document.getElementById("readytoship").innerHTML = "Ready To Ship";
+		document.getElementById("instock").innerHTML = "&#10003; In Stock";
+		document.getElementById("fastdispatch").innerHTML = "&#10003; Fast Dispatch";
+	}
+
+
+	
+}
+
+// Calling the function
+getproduct();
+</script>
+
+</html>
